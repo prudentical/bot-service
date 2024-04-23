@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: botservice
+  datasource:
+    host: localhost
+    port: 5432
+    database: db
+    url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.database}
+    username: user
+    password: password
+server:
+  port : 8080

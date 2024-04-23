@@ -1,0 +1,20 @@
+rootProject.name = 'botservice'
+
+import java.util.Optional
+
+def setProxy = { uri ->
+    def port = uri.port>0 ? String.valueOf(uri.port) : ""
+    
+    System.setProperty 'https.proxyHost', uri.host 
+    System.setProperty "https.proxyPort", port
+    
+    println "Useing system proxy `$uri`"
+}
+
+def useSystemProxy = {
+    Optional.ofNullable(System.getenv('https_proxy')) 
+        .map{str -> URI.create(str)}
+        .ifPresent{uri -> setProxy(uri)} 
+}
+
+useSystemProxy()
