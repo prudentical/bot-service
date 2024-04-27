@@ -103,3 +103,11 @@ hibernate {
     }
 }
 
+task downloadBuildDependencies { 
+   doLast { 
+       configurations.findAll{it.canBeResolved}
+                    .findAll{ dependency -> !dependency.name.toLowerCase().contains('test')}
+                    .findAll{ dependency -> !dependency.name.toLowerCase().contains('development')}
+                    .each{it.resolve()}
+   }
+}
