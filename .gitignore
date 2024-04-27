@@ -9,7 +9,14 @@ bin/
 ## Visual Studio Code
 ##############################
 .vscode/
-.code-workspace
+
+##############################
+## Eclipse
+##############################
+.classpath
+.project
+.settings
+
 
 ##############################
 ## File system
