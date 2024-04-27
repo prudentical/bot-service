@@ -1,13 +1,18 @@
-FROM gradle:8.7.0-jdk21-graal-jammy as jre-build
+FROM eclipse-temurin:21.0.2_13-jdk-jammy as jre-build
 WORKDIR /app
 
-# Download and cache dependencies in a separate layer
-COPY build.gradle settings.gradle ./
-RUN gradle dependencies --no-daemon
+COPY gradle/ gradle/
+COPY gradlew gradle.properties settings.gradle ./
+
+# Download the gradle wrapper
+RUN ./gradlew wrapper || true
+
+COPY build.gradle ./
+RUN ./gradlew downloadBuildDependencies --no-daemon
 
 COPY ./src ./src
 
-RUN gradle bootJar --no-daemon
+RUN ./gradlew bootJar --no-daemon --offline
 
 
 FROM eclipse-temurin:21-jre-alpine as jre-alpine 

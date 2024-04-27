@@ -16,14 +16,19 @@ public class SpotGridBotCrudServiceImpl implements SpotGridBotCrudService {
 
     private SpotGridBotDAO dao;
 
+    private AccountService accounts;
+
     @Autowired
-    public SpotGridBotCrudServiceImpl(SpotGridBotDAO dao) {
+    public SpotGridBotCrudServiceImpl(SpotGridBotDAO dao, AccountService accounts) {
         this.dao = dao;
+        this.accounts = accounts;
     }
 
     @Override
     public void create(long userId, long accountId, SpotGridBot bot) {
-        // Todo: validate that account belongs to the user.
+        accounts.getAccount(userId, accountId)
+                .orElseThrow(NotFoundException::noAccount);
+
         bot.setId(null);
         bot.setAccountId(accountId);
         dao.persist(bot);
@@ -31,10 +36,12 @@ public class SpotGridBotCrudServiceImpl implements SpotGridBotCrudService {
 
     @Override
     public SpotGridBot getById(long userId, long accountId, long id) {
-        // Todo: validate that account belongs to the user.
+        accounts.getAccount(userId, accountId)
+                .orElseThrow(NotFoundException::noAccount);
+
         return dao.findById(id)
                 .filter(bot -> bot.getAccountId() == accountId)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(NotFoundException::noBot);
     }
 
     @Override
@@ -53,6 +60,9 @@ public class SpotGridBotCrudServiceImpl implements SpotGridBotCrudService {
 
     @Override
     public Page<SpotGridBot> getAll(long userId, long accountId, Optional<Integer> page, Optional<Integer> size) {
+        accounts.getAccount(userId, accountId)
+                .orElseThrow(NotFoundException::noAccount);
+
         var pageNumber = page.filter(p -> p >= 0).orElse(0);
         var pageSize = size.filter(s -> s > 0).orElse(20);
 
