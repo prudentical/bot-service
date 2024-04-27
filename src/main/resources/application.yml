@@ -1,12 +1,14 @@
 spring:
   application:
-    name: botservice
+    name: bot-service
   datasource:
     host: localhost
-    port: 5432
+    port: 5435
     database: db
     url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.database}
     username: user
     password: password
 server:
   port : 8080
+  error:
+    include-stacktrace: never
