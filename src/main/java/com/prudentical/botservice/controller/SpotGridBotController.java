@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.prudentical.botservice.model.SpotGridBot;
 import com.prudentical.botservice.persistence.Page;
-import com.prudentical.botservice.service.SpotGridBotService;
+import com.prudentical.botservice.service.bot.grid.SpotGridBotService;
 
 import jakarta.validation.Valid;
 
@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/users/{userId}/accounts/{accountId}/bots/spot-grid")
 public class SpotGridBotController {
 
-    private SpotGridBotService service;
+    private final SpotGridBotService service;
 
     @Autowired
     public SpotGridBotController(SpotGridBotService service) {
@@ -77,4 +77,24 @@ public class SpotGridBotController {
         service.deleteById(userId, accountId, id);
         return ResponseEntity.noContent().build();
     }
+
+
+    @PutMapping("/{id}/start")
+    public ResponseEntity<Void> start(
+            @PathVariable("userId") long userId,
+            @PathVariable("accountId") long accountId,
+            @PathVariable("id") long id) {
+        service.start(userId, accountId, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/stop")
+    public ResponseEntity<Void> stop(
+            @PathVariable("userId") long userId,
+            @PathVariable("accountId") long accountId,
+            @PathVariable("id") long id) {
+        service.start(userId, accountId, id);
+        return ResponseEntity.ok().build();
+    }
+
 }
