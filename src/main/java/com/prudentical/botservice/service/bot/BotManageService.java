@@ -1,4 +1,4 @@
-package com.prudentical.botservice.service;
+package com.prudentical.botservice.service.bot;
 
 public interface BotManageService {
 

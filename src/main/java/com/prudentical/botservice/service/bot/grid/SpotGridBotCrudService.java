@@ -1,8 +1,9 @@
-package com.prudentical.botservice.service;
+package com.prudentical.botservice.service.bot.grid;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -10,28 +11,31 @@ import com.prudentical.botservice.exceptions.NotFoundException;
 import com.prudentical.botservice.model.SpotGridBot;
 import com.prudentical.botservice.persistence.Page;
 import com.prudentical.botservice.persistence.SpotGridBotDAO;
+import com.prudentical.botservice.service.AccountService;
+import com.prudentical.botservice.service.bot.BotCrudService;
 
+@Primary
 @Service
-public class SpotGridBotCrudServiceImpl implements SpotGridBotCrudService {
+public class SpotGridBotCrudService implements BotCrudService<SpotGridBot> {
 
-    private SpotGridBotDAO dao;
+    private final SpotGridBotDAO dao;
 
-    private AccountService accounts;
+    private final AccountService accounts;
 
     @Autowired
-    public SpotGridBotCrudServiceImpl(SpotGridBotDAO dao, AccountService accounts) {
+    public SpotGridBotCrudService(SpotGridBotDAO dao, AccountService accounts) {
         this.dao = dao;
         this.accounts = accounts;
     }
 
     @Override
     public void create(long userId, long accountId, SpotGridBot bot) {
-        accounts.getAccount(userId, accountId)
+        var account = accounts.getAccount(userId, accountId)
                 .orElseThrow(NotFoundException::noAccount);
-
         bot.setId(null);
         bot.setAccountId(accountId);
         dao.persist(bot);
+        accounts.lockCapital(account, bot.getCapital());
     }
 
     @Override
