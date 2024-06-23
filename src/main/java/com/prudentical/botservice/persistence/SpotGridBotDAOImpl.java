@@ -42,7 +42,7 @@ public class SpotGridBotDAOImpl implements SpotGridBotDAO {
     public Page<SpotGridBot> findByAccountId(long accountId, Pageable page) {
         var found = repo.findByAccountId(accountId,page);
         return Page.<SpotGridBot>builder()
-                .content(found.getContent())
+                .list(found.getContent())
                 .page(found.getNumber())
                 .size(found.getSize())
                 .total(found.getTotalElements())

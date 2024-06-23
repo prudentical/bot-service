@@ -1,6 +1,7 @@
 package com.prudentical.botservice.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -31,7 +32,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "bots", indexes = {
         @Index(name = "idx_bots_account_id", columnList = "account_id") }, uniqueConstraints = {
-                @UniqueConstraint(name = "uq_bots_title_per_account",columnNames = { "account_id", "title" }) })
+                @UniqueConstraint(name = "uq_bots_title_per_account", columnNames = { "account_id", "title" }) })
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = Bot.DISCRIMINATOR_COLUMN, discriminatorType = DiscriminatorType.STRING, length = 50)
 public abstract class Bot extends BaseModel<Long> {
@@ -52,6 +53,12 @@ public abstract class Bot extends BaseModel<Long> {
     @Column(name = "exchange_id", nullable = false)
     private Long exchangeId;
 
+    @Column(name = "active", nullable = false)
+    private boolean active;
+    
+    @Column(name = "last_check")
+    private Instant lastCheck;
+
     @NotNull
     @Column(name = "title", nullable = false)
     private String title;
@@ -65,5 +72,8 @@ public abstract class Bot extends BaseModel<Long> {
 
     @Column(name = "stop_loss")
     private BigDecimal stopLoss;
+
+    @Column(name = "exit_type")
+    private BotExitType exitType;
 
 }
