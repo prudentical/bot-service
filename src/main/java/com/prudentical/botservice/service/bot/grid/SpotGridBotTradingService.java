@@ -80,7 +80,7 @@ public class SpotGridBotTradingService implements BotTradingService {
         log.info("SpotGridBot with id[{}] started", id);
         var bot = crud.getById(userId, accountId, id);
         var context = setupBotContext(userId, accountId, id, bot);
-        while (bot.isActive()) {
+        while (context.bot().isActive()) {
             context = tryToBuy(context);
             context = tryToSell(context);
             context = tryToStopLoss(context);
