@@ -64,7 +64,7 @@ public class SpotGridBotTradingServiceTest {
     @Test
     void start_singleBuy_shouldPlaceOrder() {
         bot = spy(bot);
-        when(bot.isActive()).thenReturn(true, true, false);
+        when(bot.isActive()).thenReturn(true, true, true, false);
         when(crud.getById(0, 0, 0)).thenReturn(bot);
         when(order.getOpenPositions(0, 0, 0))
                 .thenReturn(List.of());
