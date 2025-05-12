@@ -17,4 +17,11 @@ public record OrderDTO(
         OrderStatus status,
         Instant timestamp) {
 
+    public boolean isBuyOrder(){
+        return type == TradeType.Buy;
+    }
+    
+    public boolean isSellOrder(){
+        return type == TradeType.Buy;
+    }
 }
