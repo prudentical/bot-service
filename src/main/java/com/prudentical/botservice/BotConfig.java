@@ -6,6 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
 @ConfigurationProperties(prefix = "application.bot")
-public record BotConfig(Duration coolDown, Duration UpdateFreq) {
+public record BotConfig(Duration coolDown, Duration updateFreq) {
     
 }
