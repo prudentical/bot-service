@@ -10,13 +10,16 @@ import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Component;
 
+import com.prudentical.botservice.dto.OrderDTO;
+import com.prudentical.botservice.dto.PositionDTO;
+
 @Component
 public class GriderImpl implements Grider {
 
     @Override
-    public Map<Integer, BigDecimal> getGridPricePoints(BigDecimal ceiling, BigDecimal floor, int grids) {
+    public Map<Integer, BigDecimal> getGridPricePoints(BigDecimal floor, BigDecimal ceiling, int grids) {
         var diff = ceiling.subtract(floor);
-        var gridUnitPrice = diff.divide(BigDecimal.valueOf(grids),30,RoundingMode.HALF_UP);
+        var gridUnitPrice = diff.divide(BigDecimal.valueOf(grids), 30, RoundingMode.HALF_UP);
         var gridPrices = IntStream.rangeClosed(1, grids)
                 .mapToObj(BigDecimal::valueOf)
                 .collect(Collectors.toMap(BigDecimal::intValue, grid -> calcGridPrice(floor, gridUnitPrice, grid)));
@@ -36,5 +39,12 @@ public class GriderImpl implements Grider {
         var increase = gridUnitPrice.multiply(grid);
         var price = floor.add(increase);
         return price;
+    }
+
+    @Override
+    public int getPositionGrid(Map<Integer, BigDecimal> gridPricePoints, PositionDTO position) {
+        var positionPrice = position.orders().stream().filter(OrderDTO::isBuyOrder).findFirst().get().price();
+        var positionGrid = getPriceGrid(gridPricePoints, positionPrice);
+        return positionGrid.get();
     }
 }
